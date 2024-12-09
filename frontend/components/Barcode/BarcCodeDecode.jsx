@@ -55,16 +55,16 @@ const BarcodeScanner = () => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-4 bg-white shadow-md rounded-lg">
+    <div className="w-full max-w-lg mx-auto p-2 bg-neutral-700 shadow-md rounded-lg">
       <div
         ref={scannerRef}
-        className={`relative w-full h-64 mb-4 overflow-hidden ${
-          scanning ? "border-2 border-blue-500" : "border-2 border-gray-300"
+        className={`relative w-full h-64 mb-4 overflow-hidden rounded-lg ${
+          scanning ? "border-2 border-blue-500" : "border-2 border-neutral-500"
         }`}
       >
         {!scanning && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-            <FaCamera className="w-12 h-12 text-gray-400" />
+          <div className="absolute inset-0 flex items-center justify-center bg-neutral-500">
+            <FaCamera className="w-12 h-12 text-neutral-300" />
           </div>
         )}
       </div>

@@ -5,13 +5,15 @@ import Column from "./prompts/Column";
 import { BurnBarrel } from "./prompts/BurnBarrel";
 import { Button } from "antd";
 import Link from "next/link";
+import BarcodeScanner from "../Barcode/BarcCodeDecode";
 
 export const Board = () => {
   const [cards, setCards] = useState(DEFAULT_CARDS);
 
   return (
     <section className="h-screen w-full bg-neutral-800 text-neutral-50">
-      <div className="flex flex-col h-full w-full gap-3 overflow-auto p-12">
+      <div className="flex flex-col h-full w-full gap-3 overflow-auto p-5">
+        <BarcodeScanner />
         <h1 className="text-3xl text-center pb-5 w-full font-semibold">
           WelCome to Swapno Dashboard
         </h1>
