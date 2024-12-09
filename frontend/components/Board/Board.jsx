@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Column from "./prompts/Column";
 import { BurnBarrel } from "./prompts/BurnBarrel";
-import { Button, Space } from "antd";
+import { Button } from "antd";
 import Link from "next/link";
 
 export const Board = () => {
@@ -12,7 +12,9 @@ export const Board = () => {
   return (
     <section className="h-screen w-full bg-neutral-800 text-neutral-50">
       <div className="flex flex-col h-full w-full gap-3 overflow-auto p-12">
-        <h1 className="text-3xl text-center pb-5 w-full font-semibold">WelCome to Dashboard</h1>
+        <h1 className="text-3xl text-center pb-5 w-full font-semibold">
+          WelCome to Swapno Dashboard
+        </h1>
         <div className="flex gap-3 justify-center w-full">
           <Column
             title="Not Categorized"
