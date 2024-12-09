@@ -68,7 +68,7 @@ const ProductsPage = () => {
         loading={GetProductDataLoading}
         onDelete={handleDelete}
         onEdit={handleEdit}
-        hiddenColumns={["_id", "createdAt", "updatedAt", "__v", "category"]}
+        hiddenColumns={["_id", "createdAt", "updatedAt", "__v"]}
       />
       <CustomModal
         title="Products"

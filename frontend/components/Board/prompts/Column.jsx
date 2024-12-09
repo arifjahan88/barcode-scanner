@@ -1,16 +1,20 @@
+"use client";
+
 import { useState } from "react";
-import { AddCard } from "./AddCard";
 import { Card } from "./Card";
 import { DropIndicator } from "./DropIndicator";
+import { useUpdateProductsMutation } from "@/store/api/endpoints/products";
+import { toast } from "react-toastify";
 
 const Column = ({ title, headingColor, cards, column, setCards }) => {
   const [active, setActive] = useState(false);
+  const [updateProducts] = useUpdateProductsMutation();
 
   const handleDragStart = (e, card) => {
-    e.dataTransfer.setData("cardId", card.id);
+    e.dataTransfer.setData("cardId", card._id);
   };
 
-  const handleDragEnd = (e) => {
+  const handleDragEnd = async (e) => {
     const cardId = e.dataTransfer.getData("cardId");
 
     setActive(false);
@@ -24,24 +28,37 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
     if (before !== cardId) {
       let copy = [...cards];
 
-      let cardToTransfer = copy.find((c) => c.id === cardId);
+      let cardToTransfer = copy.find((c) => c._id === cardId);
+      const isChangingColumn = cardToTransfer.column !== column;
       if (!cardToTransfer) return;
       cardToTransfer = { ...cardToTransfer, column };
 
-      copy = copy.filter((c) => c.id !== cardId);
+      copy = copy.filter((c) => c._id !== cardId);
 
       const moveToBack = before === "-1";
 
       if (moveToBack) {
         copy.push(cardToTransfer);
       } else {
-        const insertAtIndex = copy.findIndex((el) => el.id === before);
+        const insertAtIndex = copy.findIndex((el) => el._id === before);
         if (insertAtIndex === undefined) return;
 
         copy.splice(insertAtIndex, 0, cardToTransfer);
       }
 
       setCards(copy);
+
+      if (isChangingColumn) {
+        const res = await updateProducts({
+          id: cardToTransfer._id,
+          data: {
+            category: !cardToTransfer?.category,
+          },
+        });
+        if (res?.data?.success) {
+          toast.success(res?.data?.message || "Something went wrong");
+        }
+      }
     }
   };
 
@@ -103,7 +120,7 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
     setActive(false);
   };
 
-  const filteredCards = cards.filter((c) => c.column === column);
+  const filteredCards = cards?.filter((c) => c.column === column);
 
   return (
     <div className="w-56 shrink-0">
@@ -120,10 +137,10 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
         }`}
       >
         {filteredCards.map((c) => {
-          return <Card key={c.id} {...c} handleDragStart={handleDragStart} />;
+          return <Card key={c._id} {...c} handleDragStart={handleDragStart} />;
         })}
         <DropIndicator beforeId={null} column={column} />
-        <AddCard column={column} setCards={setCards} />
+        {/* <AddCard column={column} setCards={setCards} /> */}
       </div>
     </div>
   );

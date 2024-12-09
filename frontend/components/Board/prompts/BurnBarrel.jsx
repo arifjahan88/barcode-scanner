@@ -1,9 +1,12 @@
 import { FiTrash } from "react-icons/fi";
 import { FaFire } from "react-icons/fa";
 import { useState } from "react";
+import { useDeleteProductsMutation } from "@/store/api/endpoints/products";
+import { toast } from "react-toastify";
 
 export const BurnBarrel = ({ setCards }) => {
   const [active, setActive] = useState(false);
+  const [DeleteProducts] = useDeleteProductsMutation();
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -14,10 +17,16 @@ export const BurnBarrel = ({ setCards }) => {
     setActive(false);
   };
 
-  const handleDragEnd = (e) => {
+  const handleDragEnd = async (e) => {
     const cardId = e.dataTransfer.getData("cardId");
+    console.log(cardId);
 
-    setCards((pv) => pv.filter((c) => c.id !== cardId));
+    setCards((pv) => pv.filter((c) => c._id !== cardId));
+
+    const res = await DeleteProducts(cardId);
+    if (res?.data?.success) {
+      toast.success(res?.data?.message || "Something went wrong");
+    }
 
     setActive(false);
   };

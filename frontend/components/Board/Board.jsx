@@ -1,14 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Column from "./prompts/Column";
 import { BurnBarrel } from "./prompts/BurnBarrel";
 import { Button } from "antd";
 import Link from "next/link";
 import BarcodeScanner from "../Barcode/BarcCodeDecode";
+import { useGetallProductsQuery } from "@/store/api/endpoints/products";
 
 export const Board = () => {
-  const [cards, setCards] = useState(DEFAULT_CARDS);
+  const { data: AllProducts, isLoading } = useGetallProductsQuery();
+  const [cards, setCards] = useState([]);
+
+  useEffect(() => {
+    if (AllProducts?.data) {
+      const TransformData = AllProducts.data.map((item) => ({
+        ...item,
+        column: item?.category ? "categorized" : "uncategorized",
+      }));
+      setCards(TransformData);
+    }
+  }, [AllProducts]);
 
   return (
     <section className="h-screen w-full bg-neutral-800 text-neutral-50">
@@ -17,30 +29,34 @@ export const Board = () => {
         <h1 className="text-3xl text-center pb-5 w-full font-semibold">
           WelCome to Swapno Dashboard
         </h1>
-        <div className="flex gap-3 justify-center w-full">
-          <Column
-            title="Not Categorized"
-            column="uncategorized"
-            headingColor="text-blue-200"
-            cards={cards}
-            setCards={setCards}
-          />
-          <Column
-            title="Categorized"
-            column="categorized"
-            headingColor="text-emerald-200"
-            cards={cards}
-            setCards={setCards}
-          />
-          <div>
-            <BurnBarrel setCards={setCards} />
-            <Link href="/products">
-              <Button className="mt-2 w-full" color="default" variant="outlined">
-                Add Product
-              </Button>
-            </Link>
+        {isLoading ? (
+          "Loading..."
+        ) : (
+          <div className="flex gap-3 justify-center w-full">
+            <Column
+              title="Not Categorized"
+              column="uncategorized"
+              headingColor="text-blue-200"
+              cards={cards}
+              setCards={setCards}
+            />
+            <Column
+              title="Categorized"
+              column="categorized"
+              headingColor="text-emerald-200"
+              cards={cards}
+              setCards={setCards}
+            />
+            <div>
+              <BurnBarrel setCards={setCards} />
+              <Link href="/products">
+                <Button className="mt-2 w-full" color="default" variant="outlined">
+                  Add Product
+                </Button>
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
