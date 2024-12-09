@@ -32,7 +32,7 @@ export const Board = () => {
         {isLoading ? (
           "Loading..."
         ) : (
-          <div className="flex gap-3 justify-center w-full">
+          <div className="flex flex-col md:flex-row gap-3 justify-center w-full">
             <Column
               title="Not Categorized"
               column="uncategorized"

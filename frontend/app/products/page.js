@@ -1,9 +1,12 @@
 import ProductsPage from "@/components/Pages/ProductsPage";
+import { PrivateRoute } from "@/components/routes/PrivateRoute";
 
 const page = () => {
   return (
     <>
-      <ProductsPage />
+      <PrivateRoute>
+        <ProductsPage />
+      </PrivateRoute>
     </>
   );
 };

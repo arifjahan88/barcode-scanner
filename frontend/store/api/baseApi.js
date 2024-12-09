@@ -4,9 +4,16 @@ const baseApi = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+        return headers;
+      }
+    },
   }),
 
-  tagTypes: ["products"],
+  tagTypes: ["products", "user"],
   endpoints: () => ({}),
 });
 

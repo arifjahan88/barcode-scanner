@@ -1,12 +1,25 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
+
+import { useUseLoginMutation } from "@/store/api/endpoints/auth";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+
 const Login = () => {
-  const handleSubmit = (e) => {
+  const [userLogin] = useUseLoginMutation();
+  const router = useRouter();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
-    console.log(email, password);
+    const res = await userLogin({ email, password });
+    if (res?.data?.success) {
+      localStorage.setItem("token", res?.data?.data?.token);
+      router.push("/");
+      toast.success(res.data.message);
+    }
   };
   return (
     <>
