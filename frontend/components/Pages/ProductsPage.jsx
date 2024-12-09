@@ -2,27 +2,33 @@
 
 import { useDispatch } from "react-redux";
 import { ProductsFormData } from "../Common/Form/FormData";
-import { SuccessNotification } from "../Hooks/Notification";
 import { handleModal } from "@/store/slices/modalSlice";
 import HeaderWithText from "../Common/Header/HeaderWithText";
 import { CustomTable } from "../Common/Table/CustomTable";
 import CustomModal from "../Common/Modal/CustomModal";
 import CustomForm from "../Common/Form/CustomForm";
+import {
+  useAddProductsMutation,
+  useDeleteProductsMutation,
+  useGetallProductsQuery,
+  useUpdateProductsMutation,
+} from "@/store/api/endpoints/products";
+import { toast } from "react-toastify";
 
 const ProductsPage = () => {
   const dispatch = useDispatch();
   const formData = ProductsFormData();
 
-  //   //Api call
-  //   const [ProductsFile, { isLoading: ProductsLoading }] = useProductsFileMutation();
-  //   const { data: AllData, isFetching: GetDataLoading } = useGetFilesQuery();
-  //   const [DeleteFile] = useDeleteFileMutation();
-  //   const [UpdateFile, { isLoading: UpdateLoading }] = useUpdateFileMutation();
+  //Api call
+  const [AddProducts, { isLoading: AddProductsLoading }] = useAddProductsMutation();
+  const { data: AllProductData, isFetching: GetProductDataLoading } = useGetallProductsQuery();
+  const [Delete] = useDeleteProductsMutation();
+  const [UpdateProducts, { isLoading: UpdateProductsLoading }] = useUpdateProductsMutation();
 
   const handleDelete = async (id) => {
-    const res = await DeleteFile(id);
+    const res = await Delete(id);
     if (res?.data?.success) {
-      SuccessNotification(res?.data?.message);
+      toast.error(res?.data?.message || "Something went wrong");
     }
   };
 
@@ -31,22 +37,23 @@ const ProductsPage = () => {
   };
 
   const onFormSubmit = async (data) => {
-    console.log(data);
-    // const sendData = new FormData();
-    // sendData.append("title", data.title);
-    // data.Products_file && sendData.append("Products_file", data.Products_file);
+    const sendData = {
+      material: data?.material,
+      barcode: data?.barcode,
+      description: data?.description,
+    };
 
-    // const apiCall = data?._id
-    //   ? await UpdateFile({
-    //       id: data?._id,
-    //       data: sendData,
-    //     })
-    //   : await ProductsFile(sendData);
+    const apiCall = data?._id
+      ? await UpdateProducts({
+          id: data?._id,
+          data: sendData,
+        })
+      : await AddProducts(sendData);
 
-    // if (apiCall?.data?.success) {
-    //   SuccessNotification(apiCall?.data?.message);
-    //   dispatch(handleModal({ open: false }));
-    // }
+    if (apiCall?.data?.success) {
+      toast.success(apiCall?.data?.message || "Something went wrong");
+      dispatch(handleModal({ open: false }));
+    }
   };
   return (
     <section className="container mx-auto p-5">
@@ -57,13 +64,11 @@ const ProductsPage = () => {
         }}
       />
       <CustomTable
-        data={{
-          data: [],
-        }}
-        loading={false}
+        data={AllProductData}
+        loading={GetProductDataLoading}
         onDelete={handleDelete}
         onEdit={handleEdit}
-        hiddenColumns={["_id", "createdAt", "updatedAt"]}
+        hiddenColumns={["_id", "createdAt", "updatedAt", "__v", "category"]}
       />
       <CustomModal
         title="Products"
@@ -72,7 +77,11 @@ const ProductsPage = () => {
           dispatch(handleModal({ open: false }));
         }}
       >
-        <CustomForm formData={formData} onSubmit={onFormSubmit} loading={false} />
+        <CustomForm
+          formData={formData}
+          onSubmit={onFormSubmit}
+          loading={AddProductsLoading || UpdateProductsLoading}
+        />
       </CustomModal>
     </section>
   );
