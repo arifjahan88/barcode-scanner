@@ -14,6 +14,7 @@ connectDb();
 
 //Routes
 app.use("/api/v1/products", require("./routes/products.route"));
+app.use("/api/v1/auth", require("./routes/user.route"));
 
 app.get("/", async (req, res) => {
   res.send("Shapno Dashboard server is running");
