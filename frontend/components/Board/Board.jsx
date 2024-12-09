@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import Column from "./prompts/Column";
 import { BurnBarrel } from "./prompts/BurnBarrel";
+import { Button, Space } from "antd";
+import Link from "next/link";
 
 export const Board = () => {
   const [cards, setCards] = useState(DEFAULT_CARDS);
@@ -26,7 +28,14 @@ export const Board = () => {
             cards={cards}
             setCards={setCards}
           />
-          <BurnBarrel setCards={setCards} />
+          <div>
+            <BurnBarrel setCards={setCards} />
+            <Link href="/products">
+              <Button className="mt-2 w-full" color="default" variant="outlined">
+                Add Product
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </section>
