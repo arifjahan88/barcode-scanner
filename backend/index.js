@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-// const { connectDb } = require("./utils/connectDb");
+const { connectDb } = require("./utils/connectDb.js");
 require("dotenv").config();
 const port = process.env.PORT || 5000;
 const app = express();
@@ -10,10 +10,10 @@ app.use(cors());
 app.use(express.json());
 
 //MongoDb connection
-// connectDb();
+connectDb();
 
 //Routes
-app.use("/api/v1", require("./routes/user.route.js"));
+app.use("/api/v1/products", require("./routes/products.route"));
 
 app.get("/", async (req, res) => {
   res.send("Shapno Dashboard server is running");
@@ -21,13 +21,8 @@ app.get("/", async (req, res) => {
 
 //Error Handeling
 app.use((err, req, res, next) => {
-  if (err.name === "ValidationError") {
-    const validationErrors = Object.values(err.errors).map((error) => error.message);
-    return res.status(400).json({ success: false, message: validationErrors });
-  }
-
   const errorStatus = err.status || 500;
-  const errorMassage = err.message || "Something went wrong";
+  const errorMassage = err?.response?.data?.error || err.message || "Something went wrong";
   res.status(errorStatus).json({
     success: false,
     status: errorStatus,
