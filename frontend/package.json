@@ -1,5 +1,5 @@
 {
-  "name": "barcode-scanner",
+  "name": "barcode-scanner-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,22 +11,18 @@
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.2",
     "@reduxjs/toolkit": "^2.4.0",
-    "@zxing/browser": "github:zxing-js/browser",
-    "@zxing/library": "^0.21.3",
     "antd": "^5.22.3",
-    "motion": "^11.13.1",
-    "next": "14.2.17",
-    "quagga": "^0.12.1",
-    "react": "^18",
-    "react-dom": "^18",
+    "motion": "^12.0.0-alpha.2",
+    "next": "15.0.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.0",
     "react-icons": "^5.4.0",
-    "react-redux": "^9.1.2",
-    "react-zxing": "^2.0.2"
+    "react-redux": "^9.1.2"
   },
   "devDependencies": {
     "eslint": "^8",
-    "eslint-config-next": "14.2.17",
+    "eslint-config-next": "15.0.4",
     "postcss": "^8",
     "tailwindcss": "^3.4.1"
   }
