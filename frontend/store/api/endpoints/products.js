@@ -42,6 +42,14 @@ export const productsApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    getBarCodeProducts: builder.query({
+      query: (id) => ({
+        url: `/products/barcode/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["products"],
+    }),
   }),
 });
 
@@ -51,4 +59,5 @@ export const {
   useEditProductsQuery,
   useGetallProductsQuery,
   useUpdateProductsMutation,
+  useGetBarCodeProductsQuery,
 } = productsApi;

@@ -1,13 +1,32 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FaCamera } from "react-icons/fa";
 import Quagga from "quagga";
+import { useAddProductsMutation, useGetBarCodeProductsQuery } from "@/store/api/endpoints/products";
+import { toast } from "react-toastify";
 
 const BarcodeScanner = () => {
   const [scanning, setScanning] = useState(false);
   const [result, setResult] = useState(null);
+  const [addProducts] = useAddProductsMutation();
+  const { data: BarCodeProducts } = useGetBarCodeProductsQuery(result, {
+    skip: !result,
+  });
   const scannerRef = useRef(null);
+
+  useEffect(() => {
+    const addProductAsync = async () => {
+      if (BarCodeProducts?.data?.status) {
+        const res = await addProducts(BarCodeProducts?.data?.product);
+        if (res?.data?.success) {
+          setResult(null);
+          toast.success(res?.data?.message || "Something went wrong");
+        }
+      }
+    };
+    addProductAsync();
+  }, [BarCodeProducts, addProducts]);
 
   const startScanning = () => {
     setScanning(true);

@@ -1,4 +1,4 @@
-import { Table as AntTable, Button, Flex } from "antd";
+import { Table as AntTable, Button, Flex, Tag } from "antd";
 import { useDispatch } from "react-redux";
 import { TableActions } from "./TableActions";
 import { TableHeader } from "./tableHeader";
@@ -51,21 +51,8 @@ export const CustomTable = ({
               title={key[0].toUpperCase() + key.slice(1)}
               width={150}
               render={(value) => {
-                if (key === "url") {
-                  return (
-                    <Flex align="center" gap={5}>
-                      <Button type="primary" onClick={() => window.open(value)}>
-                        View File
-                      </Button>
-                      <Button
-                        type="primary"
-                        danger
-                        onClick={() => window.open(value + "?download=1")}
-                      >
-                        Download File
-                      </Button>
-                    </Flex>
-                  );
+                if (key === "category") {
+                  return <Tag color={value ? "green" : "red"}>{value ? "True" : "False"}</Tag>;
                 }
 
                 return value;

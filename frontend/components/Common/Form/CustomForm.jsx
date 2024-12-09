@@ -30,7 +30,18 @@ const CustomForm = ({ formData, onSubmit, loading }) => {
           <Controller
             name={data.name}
             control={control}
-            rules={{ required: data.required ? "This field is required" : false }}
+            rules={{
+              required: data.required ? "This field is required" : false,
+              // Add pattern validation for material and barcode
+              ...(data.name === "material" || data.name === "barcode"
+                ? {
+                    pattern: {
+                      value: /^[0-9]+$/,
+                      message: "Only numbers are allowed",
+                    },
+                  }
+                : {}),
+            }}
             render={({ field }) => <FieldRenderer field={field} data={data} setValue={setValue} />}
           />
           {errors[data.name] && (
