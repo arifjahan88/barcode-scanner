@@ -21,18 +21,17 @@ const CustomForm = ({ formData, onSubmit, loading }) => {
   useFormSetup({ setValue, reset });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
       {formData?.map((data, index) => (
-        <div key={index} className={`flex flex-col ${data?.type === "file" ? "col-span-2" : ""}`}>
-          <label htmlFor={data.name} className="mt-3 mb-1 ml-1">
-            {data.label}
-          </label>
+        <div key={index} className={`flex flex-col`}>
+          {data.label && data.type !== "checkbox" && (
+            <label className="mt-2 mb-1">{data.label}</label>
+          )}
           <Controller
             name={data.name}
             control={control}
             rules={{
               required: data.required ? "This field is required" : false,
-              // Add pattern validation for material and barcode
               ...(data.name === "material" || data.name === "barcode"
                 ? {
                     pattern: {

@@ -8,10 +8,12 @@ import Link from "next/link";
 import BarcodeScanner from "../Barcode/BarcCodeDecode";
 import { useGetallProductsQuery } from "@/store/api/endpoints/products";
 import { PrivateRoute } from "../routes/PrivateRoute";
+import { useLogout } from "../Hooks/Logout";
 
 export const Board = () => {
   const { data: AllProducts, isLoading } = useGetallProductsQuery();
   const [cards, setCards] = useState([]);
+  const Logout = useLogout();
 
   useEffect(() => {
     if (AllProducts?.data) {
@@ -51,11 +53,16 @@ export const Board = () => {
               />
               <div>
                 <BurnBarrel setCards={setCards} />
-                <Link href="/products">
-                  <Button className="mt-2 w-full" color="default" variant="outlined">
-                    Add Product
+                <div className="flex flex-col md:flex-row gap-3">
+                  <Link href="/products">
+                    <Button className="mt-2 w-full" color="default" variant="outlined">
+                      Add Product
+                    </Button>
+                  </Link>
+                  <Button onClick={Logout} className="mt-2 w-full" type="primary">
+                    Logout
                   </Button>
-                </Link>
+                </div>
               </div>
             </div>
           )}

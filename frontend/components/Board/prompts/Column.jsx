@@ -5,6 +5,8 @@ import { Card } from "./Card";
 import { DropIndicator } from "./DropIndicator";
 import { useUpdateProductsMutation } from "@/store/api/endpoints/products";
 import { toast } from "react-toastify";
+import { FiPlus } from "react-icons/fi";
+import Link from "next/link";
 
 const Column = ({ title, headingColor, cards, column, setCards }) => {
   const [active, setActive] = useState(false);
@@ -140,7 +142,14 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
           return <Card key={c._id} {...c} handleDragStart={handleDragStart} />;
         })}
         <DropIndicator beforeId={null} column={column} />
-        {/* <AddCard column={column} setCards={setCards} /> */}
+        {column === "categorized" && (
+          <Link href="/products">
+            <button className="flex w-full items-center gap-1.5 px-3 py-1.5 text-xs text-neutral-400 transition-colors hover:text-neutral-50">
+              <span>Add Category</span>
+              <FiPlus />
+            </button>
+          </Link>
+        )}
       </div>
     </div>
   );

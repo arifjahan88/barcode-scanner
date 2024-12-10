@@ -14,6 +14,7 @@ import {
   useUpdateProductsMutation,
 } from "@/store/api/endpoints/products";
 import { toast } from "react-toastify";
+import { PrivateRoute } from "../routes/PrivateRoute";
 
 const ProductsPage = () => {
   const dispatch = useDispatch();
@@ -41,6 +42,7 @@ const ProductsPage = () => {
       material: data?.material,
       barcode: data?.barcode,
       description: data?.description,
+      category: data?.category,
     };
 
     const apiCall = data?._id
@@ -56,34 +58,36 @@ const ProductsPage = () => {
     }
   };
   return (
-    <section className="container mx-auto p-5">
-      <HeaderWithText
-        label="Products"
-        onclick={() => {
-          dispatch(handleModal({ open: true }));
-        }}
-      />
-      <CustomTable
-        data={AllProductData}
-        loading={GetProductDataLoading}
-        onDelete={handleDelete}
-        onEdit={handleEdit}
-        hiddenColumns={["_id", "createdAt", "updatedAt", "__v"]}
-      />
-      <CustomModal
-        title="Products"
-        width={600}
-        onclose={() => {
-          dispatch(handleModal({ open: false }));
-        }}
-      >
-        <CustomForm
-          formData={formData}
-          onSubmit={onFormSubmit}
-          loading={AddProductsLoading || UpdateProductsLoading}
+    <PrivateRoute>
+      <section className="container mx-auto p-5">
+        <HeaderWithText
+          label="Products"
+          onclick={() => {
+            dispatch(handleModal({ open: true }));
+          }}
         />
-      </CustomModal>
-    </section>
+        <CustomTable
+          data={AllProductData}
+          loading={GetProductDataLoading}
+          onDelete={handleDelete}
+          onEdit={handleEdit}
+          hiddenColumns={["_id", "createdAt", "updatedAt", "__v"]}
+        />
+        <CustomModal
+          title="Products"
+          width={600}
+          onclose={() => {
+            dispatch(handleModal({ open: false }));
+          }}
+        >
+          <CustomForm
+            formData={formData}
+            onSubmit={onFormSubmit}
+            loading={AddProductsLoading || UpdateProductsLoading}
+          />
+        </CustomModal>
+      </section>
+    </PrivateRoute>
   );
 };
 
