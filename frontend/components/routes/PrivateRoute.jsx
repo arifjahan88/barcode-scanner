@@ -1,21 +1,35 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem("token");
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
-    if (!token) {
+    // Ensure we're on the client side
+    setIsClient(true);
+
+    // Safely get token from localStorage
+    const storedToken = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+    setToken(storedToken);
+  }, []);
+
+  useEffect(() => {
+    // Redirect if no token is found
+    if (isClient && !token) {
       router.push("/login");
     }
-  }, [token, router]);
+  }, [isClient, token, router]);
 
-  if (!token) {
+  // Render nothing until client-side checks are complete
+  if (!isClient) {
     return null;
   }
 
-  return children;
+  // Only render children if token exists
+  return token ? children : null;
 };
